@@ -1,0 +1,21 @@
+body {
+  font-family: sans-serif;
+  font-size: 1.2em;
+}
+
+.menuItem div {
+  /*display: inline-block;*/
+}
+
+#plate-template, #drink-template {
+  display: none;
+}
+.menuItem {
+padding: 10px;
+}
+button {
+  margin-top: 15px;
+}
+#orderDetails button {
+  display: none;
+}

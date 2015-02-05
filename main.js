@@ -10,7 +10,7 @@ var Fooditem = function(name, calories, vegan, glutenFree, citusFree){
 };
 
 Fooditem.prototype.toString = function(){
-  console.log('name:', this.name, 'calories:', this.calories, 'vegan:', this.vegan, 'glutenFree:', this.glutenFree, 'citusFree:', this.citusFree);
+  // console.log('name:', this.name, 'calories:', this.calories, 'vegan:', this.vegan, 'glutenFree:', this.glutenFree, 'citusFree:', this.citusFree);
 };
 
 var burrito = new Fooditem('Supreme', '800', 'false', 'false', 'false');
@@ -29,6 +29,7 @@ var ServingItem = function(name, description, price, ingredients){
   this.description = description;
   this.price = price;
   this.ingredients = ingredients;
+  this.id = _.uniqueId('item-');
 };
 
 var Drink = function(name, description, price, ingredients){
@@ -44,6 +45,7 @@ var Plate = function(name, description, price, ingredients, isVegan, isGlutenFre
 
 var Order = function(plates){
   this.plates = plates;
+  this.order = [];
 };
 
 var Menu = function(plates){
@@ -66,6 +68,21 @@ Drink.prototype = new ServingItem();
 // Reset the constructor property back to the right class
 Drink.prototype.constructor = Drink;
 
+// Drink.prototype.toString = function(){
+//   console.log(this.name, this.description, this.price, this.ingredients);
+// };
+
+Drink.prototype.render = function(){
+  this.$el = $('#drink-template')
+  .clone().attr('id', '').attr('data-id', this.id);
+
+  this.$el.find('.itemName').text(this.name);
+  this.$el.find('.itemDesc').text(this.description);
+  this.$el.find('.itemPrice').text(this.price);
+  this.$el.find('.itemIngredients').text(this.ingredients);
+
+  return this.$el;
+};
 
 // Inherit the prototype from the Vehicle class
 Plate.prototype = new ServingItem();
@@ -73,37 +90,77 @@ Plate.prototype = new ServingItem();
 // Reset the constructor property back to the right class
 Plate.prototype.constructor = Plate;
 
+Plate.prototype.render = function(){
+  this.$el =  $('#plate-template')
+  .clone().attr('id', '').attr('data-id', this.id);
 
-Drink.prototype.toString = function(){
-  console.log(this.name, this.description, this.price, this.ingredients);
+  this.$el.find('.itemName').text(this.name);
+  this.$el.find('.itemDesc').text(this.description);
+  this.$el.find('.itemPrice').text(this.price);
+  this.$el.find('.itemIngredients').text(this.ingredients);
+  this.$el.find('.dietaryInfo').text('Vegan? ' + this.isVegan
+   + " Gluten free? " + this.isGlutenFree 
+   + " Citrus free? " + this.isCitrusFree);
+  this.$el.data('plate', this);
+  return this.$el;
 };
 
-Plate.prototype.toString = function(){
-  console.log(this.name, this.description, this.price, this.ingredients);
+// method for rendering menu
+Menu.prototype.render = function(){
+
+// console.log(this);
+
+  // this.Menu.map(function()
+  this.$el =  $('#menu-template')
+  .clone().attr('id', '');
+
+  this.$el.find('.restName').text(newRest.name);
+  this.$el.find('.restDesc').text(newRest.description);
+
+  // this.$el.find('.itemName').text(this.name);
+    this.$el.append(this.plates.map(function(plate){
+      return plate.render();
+    }));
+    // console.log(myObj.constructor.name);
+  return this.$el;
 };
 
-Order.prototype.toString = function(){
-  console.log(this.plates);
+Order.prototype.render = function(){
+  // console.log(this);
+  this.$el =  $('#orderDetails')
+  .clone().attr('id', '');
+
+  this.order = this.order.concat([].slice.call(arguments));
+
+  this.$el.append(this.order.map(function(item){
+    return item.render();
+  }));
+
+  // var orderTotal = 0;
+
+  return this.$el;
 };
 
-Menu.prototype.toString = function(){
-  console.log(this.plates);
-};
+// Order.prototype.addItems = function(){
+//   console.log(Order.prototype);
+// };
 
-Restaurant.prototype.toString = function(){
-  console.log(this.name, this.description, this.menu);
-};
-
-var water = new Drink('water', 'so refreshing', 0, 'H2O');
+var water = new Drink('Water', 'so refreshing', 0, 'H2O');
 var beer = new Drink('IPA', 'will get you loaded', 5.5, 'barley, hops, water');
 var tamales = new Plate('Tamales', 'corn and steamed', 8.25, 'corn, tomatoes, cheese, pork', true, false, true);
 var quacemole = new Plate('Guac Salad', 'chips and guac as you like', 6, 'corn chips, avocados, salt, salsa', false, true, false);
-var order1 = new Order([water, tamales]);
+var order1 = new Order([]);
 var menu1 = new Menu([water, beer, tamales, quacemole]);
-var newRest = new Restaurant('La Ciesta', 'just great food and better people', menu1);
+var newRest = new Restaurant('La Ciesta', 'Great food and better people', menu1);
 
-water.toString();
-tamales.toString();
-order1.toString();
-menu1.toString();
-newRest.toString();
+$(document).on('ready', function(){
+ $('#menu-template').append(menu1.render());
+ $('button').click(function(){
+  // console.log($(this).closest('.menuItem').attr('data-id'));
+  var thisID = $(this).closest('.menuItem').attr('data-id');
+  var item = _.find(menu1.plates, function(i){
+    return i.id === thisID;
+  });
+  $('#orderDetails').empty().append(order1.render(item));
+ });
+});

@@ -3,9 +3,43 @@
   <head>
     <meta charset="utf-8">
     <title>Untitled</title>
+   <link rel="stylesheet" type="text/css" href="main.css">
   </head>
   <body>
+
+  <div id="mainContain">
     
+    <div id="plate-template" class="menuItem">
+      <!-- <h3>Plates</h3> -->
+      <div class="itemName"></div>
+      <div class="itemDesc"></div>
+      <div class="itemPrice"></div>
+      <div class="itemIngredients"></div>
+      <div class="dietaryInfo"></div>
+      <button type="button">Add to Order</button>
+    </div>
+
+    <div id="drink-template" class="menuItem">
+      <!-- <h3>Drinks</h3> -->
+      <div class="itemName"></div>
+      <div class="itemDesc"></div>
+      <div class="itemPrice"></div>
+      <div class="itemIngredients"></div>
+      <!-- <button type="button">Add to Order</button> -->
+    </div>
+    
+    
+    <div id="menu-template" class="menuItem">
+    <h1 class="restName"></h1>
+    <h2 class="restDesc"></h2>
+    </div>
+
+    <div id="orderDetails"></div>
+
+  </div>
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="main.js"></script>
 
   </body>
