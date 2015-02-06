@@ -19,3 +19,6 @@ button {
 #orderDetails button {
   display: none;
 }
+.yourOrder {
+  display: none;
+}

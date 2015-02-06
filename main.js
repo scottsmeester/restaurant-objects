@@ -125,7 +125,9 @@ Menu.prototype.render = function(){
   return this.$el;
 };
 
+
 Order.prototype.render = function(){
+  
   // console.log(this);
   this.$el =  $('#orderDetails')
   .clone().attr('id', '');
@@ -133,17 +135,20 @@ Order.prototype.render = function(){
   this.order = this.order.concat([].slice.call(arguments));
 
   this.$el.append(this.order.map(function(item){
+    // console.log(item.price);
     return item.render();
   }));
 
-  // var orderTotal = 0;
-
   return this.$el;
 };
+/**
+ * add up total of plates ordered
+ * @return {string} something I can use to display 
+ */
+Order.prototype.orderTotal = function(){
 
-// Order.prototype.addItems = function(){
-//   console.log(Order.prototype);
-// };
+
+};
 
 var water = new Drink('Water', 'so refreshing', 0, 'H2O');
 var beer = new Drink('IPA', 'will get you loaded', 5.5, 'barley, hops, water');
@@ -156,11 +161,15 @@ var newRest = new Restaurant('La Ciesta', 'Great food and better people', menu1)
 $(document).on('ready', function(){
  $('#menu-template').append(menu1.render());
  $('button').click(function(){
-  // console.log($(this).closest('.menuItem').attr('data-id'));
-  var thisID = $(this).closest('.menuItem').attr('data-id');
-  var item = _.find(menu1.plates, function(i){
+    // console.log($(this).closest('.menuItem').attr('data-id'));
+    // $('#orderDetails h2').css('display', 'block');
+    var thisID = $(this).closest('.menuItem').attr('data-id');
+    var item = _.find(menu1.plates, function(i){
     return i.id === thisID;
   });
+  console.log(item.price);
   $('#orderDetails').empty().append(order1.render(item));
+  // $('.yourOrder').css('display', 'block');
+  // $('.yourOrder').empty().append(order1.orderTotal(item.price));
  });
 });
