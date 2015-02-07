@@ -129,8 +129,8 @@ Menu.prototype.render = function(){
 Order.prototype.render = function(){
   
   // console.log(this);
-  this.$el =  $('#orderDetails')
-  .clone().attr('id', '');
+  this.$el =  $('<div>');
+  // .clone().attr('id', '');
 
   this.order = this.order.concat([].slice.call(arguments));
 
@@ -143,11 +143,17 @@ Order.prototype.render = function(){
 };
 /**
  * add up total of plates ordered
- * @return {string} something I can use to display 
+ * @return {string} dollar amount to use to display order total
  */
 Order.prototype.orderTotal = function(){
+  var runningTotal =
+    _.pluck(this.order, 'price')
+    .reduce(function(total, item){
+      return total + item;
+  }, 0);
 
 
+  return runningTotal;
 };
 
 var water = new Drink('Water', 'so refreshing', 0, 'H2O');
@@ -167,8 +173,9 @@ $(document).on('ready', function(){
     var item = _.find(menu1.plates, function(i){
     return i.id === thisID;
   });
-  console.log(item.price);
+  // console.log(item.price);
   $('#orderDetails').empty().append(order1.render(item));
+  $('.runningTotal').empty().append(order1.orderTotal(item.price));
   // $('.yourOrder').css('display', 'block');
   // $('.yourOrder').empty().append(order1.orderTotal(item.price));
  });
